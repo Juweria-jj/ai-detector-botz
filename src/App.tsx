@@ -17,16 +17,16 @@ export default function App() {
     ).length
     
     // More "AI words" = lower human score
-    let humanScore = 90 - (aiWords * 10) - (words > 200 ? 10 : 0)
+    let humanScore = 90 - (aiWords * 10) - (words > 2000 ? 10 : 0)
     if (humanScore < 20) humanScore = 20
-    if (humanScore > 95) humanScore = 95
+    if (humanScore > 97) humanScore = 97
     
     setResult(`Result: ${humanScore}% Human Written`)
   }
 
   return (
     <div style={{ padding: '40px', textAlign: 'center', fontFamily: 'Arial, sans-serif', background: '#f5f5f5', minHeight: '100vh' }}>
-      <h1 style={{ color: '#333' }}>AI Detector - NTU Demo</h1>
+      <h1 style={{ color: '#333' }}>AI Detector</h1>
       
       <textarea 
         value={text}
