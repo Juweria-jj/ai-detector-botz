@@ -10,18 +10,36 @@ export default function App() {
       return
     }
     
-    // Simple "AI detection" logic for demo
-    const words = text.split(' ').length
-    const aiWords = ['additionally', 'furthermore', 'moreover', 'delve', 'tapestry', 'realm'].filter(w => 
-      text.toLowerCase().includes(w)
-    ).length
+    const words = text.split(/\s+/).length
+    const sentences = text.split(/[.!?]+/).length
+    const avgWordsPerSentence = words / sentences
     
-    // More "AI words" = lower human score
-    let humanScore = 90 - (aiWords * 10) - (words > 2000 ? 10 : 0)
-    if (humanScore < 20) humanScore = 20
-    if (humanScore > 97) humanScore = 97
+    // AI tends to have: very consistent sentence length, perfect grammar, no typos
+    // Human tends to have: varied sentence length, "I", "you", contractions
     
-    setResult(`Result: ${humanScore}% Human Written`)
+    let aiScore = 0
+    
+    // Check 1: Very consistent sentences = AI
+    if (avgWordsPerSentence > 15 && avgWordsPerSentence < 25) aiScore += 20
+    
+    // Check 2: AI buzzwords
+    const aiWords = ['additionally', 'furthermore', 'moreover', 'delve', 'tapestry', 'realm', 'crucial', 'landscape', 'navigate']
+    const foundAIWords = aiWords.filter(w => text.toLowerCase().includes(w)).length
+    aiScore += foundAIWords * 15
+    
+    // Check 3: Humans use "I, you, we,maybe" more
+    const humanWords = ['i ', 'you ', 'we ', 'my ', 'don\'t', 'can\'t', 'it\'s','maybe']
+    const foundHumanWords = humanWords.filter(w => text.toLowerCase().includes(w)).length
+    aiScore -= foundHumanWords * 10
+    
+    // Check 4: Very long, perfect paragraphs = AI
+    if (words > 150) aiScore += 15
+    
+    let humanScore = 100 - aiScore
+    if (humanScore < 10) humanScore = 10
+    if (humanScore > 98) humanScore = 98
+    
+    setResult(`Result: ${humanScore}% Human Written | ${100-humanScore}% AI Generated`)
   }
 
   return (
